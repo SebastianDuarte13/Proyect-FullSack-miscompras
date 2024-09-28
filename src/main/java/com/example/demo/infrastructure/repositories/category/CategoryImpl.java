@@ -11,15 +11,14 @@ import com.example.demo.application.services.ICategoryService;
 import com.example.demo.domain.entity.Category;
 
 @Service
-public class CategoryImpl implements ICategoryService{
-
+public class CategoryImpl implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
     @Override
     public List<Category> findAll() {
-        return (List<Category>)categoryRepository.findAll();
+        return (List<Category>) categoryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -31,32 +30,25 @@ public class CategoryImpl implements ICategoryService{
     @Transactional
     @Override
     public Category save(Category category) {
-       return categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
 
     @Transactional
     @Override
     public Optional<Category> update(Long id, Category category) {
-        Optional<Category> categoryOld = categoryRepository.findById(id);
-        if(categoryOld.isPresent()){
-            Category categoryDb = categoryOld.orElseThrow();
-
-            categoryDb.setDescripcion(category.getDescripcion());
-            categoryDb.setEstado(category.getEstado());
-
-            return Optional.of(categoryRepository.save(categoryDb));
-        }
-        return Optional.empty();
+        return categoryRepository.findById(id).map(existingCategory -> {
+            existingCategory.setDescripcion(category.getDescripcion());
+            existingCategory.setEstado(category.getEstado());
+            return categoryRepository.save(existingCategory);
+        });
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public Optional<Category> delete(Long id) {
-       Optional<Category> categoryOptional = categoryRepository.findById(id);
-       categoryOptional.ifPresent(categoryDb -> {
-            categoryRepository.delete(categoryDb);
-       });
-       return categoryOptional;
+        return categoryRepository.findById(id).map(existingCategory -> {
+            categoryRepository.delete(existingCategory);
+            return existingCategory;
+        });
     }
-
 }
