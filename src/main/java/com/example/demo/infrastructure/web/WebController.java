@@ -8,6 +8,6 @@ public class WebController {
     
     @GetMapping("/")
     public String index() {
-        return "index";  // Asegúrate de que el archivo esté en 'src/main/resources/templates/index.html'
+        return "index";  
     }
 }

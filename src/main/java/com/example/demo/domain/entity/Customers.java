@@ -12,7 +12,7 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table(name = "Customers")
+@Table(name = "customers")
 @Data 
 public class Customers {
 
